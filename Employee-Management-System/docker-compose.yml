@@ -2,34 +2,32 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.0
-    container_name: employee-mysql
+    image: mysql:8
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: tiger
       MYSQL_DATABASE: techm2
-    ports:
-      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-    networks:
-      - employee-net
 
   app:
     build: .
-    container_name: employee-management-app
+    container_name: employee-management-system
     ports:
-      - "8080:8080"
+      - "8082:8082"
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/techm2
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/techm2
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: tiger
     networks:
-      - employee-net
+      - ems-network
 
 volumes:
   mysql-data:
 
 networks:
-  employee-net:
+  ems-network:
